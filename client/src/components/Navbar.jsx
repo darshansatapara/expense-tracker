@@ -1,9 +1,15 @@
 import React from 'react'
-
-export default function Navbar() {
+import "../css/Navbar.css"
+import ProfileButton from './ProfileButton'
+function Navbar(props) {
   return (
-    <div>
-      Navbar
-    </div>
+   <>
+    <div class="navbar-container">
+{props.name}
+  {/* <ProfileButton class="profile-button" /> */}
+  <ProfileButton />
+</div>
+   </>
   )
 }
+export default Navbar
