@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Dropdown } from 'react-bootstrap';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css"
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap-icons/font/bootstrap-icons';
 import '../css/ProfileButton.css'; // Import your CSS file for additional styling
 function ProfileButton() {
   return (
