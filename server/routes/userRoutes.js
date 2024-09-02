@@ -85,7 +85,7 @@ router.post("/signin", async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
-      });
+      }); 
     }
 
     // Hash the incoming password
