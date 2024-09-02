@@ -1,8 +1,8 @@
 import React, { useState } from "react"; // Combine all imports from 'react'
 import { Link } from "react-router-dom"; // Ensure 'react-router-dom' is installed
 import "../css/Sidebar.css"; // Correct CSS file import path
-import img from "../../images/new.webp"; // Correct the image file extension to '.webp'
-import { menuItems } from "../../utils/Item"; // Ensure the path and import are correct
+import img from "../images/new.webp"; // Correct the image file extension to '.webp'
+import { menuItems } from "../utils/Item"; // Ensure the path and import are correct
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
