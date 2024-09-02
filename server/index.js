@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const userRoutes = require("./routes/userRoutes"); // Import the user routes
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -21,7 +21,7 @@ mongoose
   });
 
 // Use the user routes
-app.use("/api/users", userRoutes); // Prefix routes with /api/users
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running...");
