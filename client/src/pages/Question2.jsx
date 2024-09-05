@@ -46,7 +46,7 @@ function Question2() {
       }
     });
   };
-
+  //
   const handleNext = () => {
     let valid = true;
 
