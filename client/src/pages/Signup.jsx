@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Container,
   TextField,
@@ -7,43 +7,27 @@ import {
   Alert,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
+import { useNavigate, Link } from "react-router-dom";
+import { useSignupContext } from "../utils/SignupContext"; // Import the custom hook
 
 export default function Signup() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    name: "",
-    mobile_no: "+91", // Default value set to "+91"
-    date_of_birth: "",
-    category: "",
-  });
-
-  const [responseMessage, setResponseMessage] = useState("");
-  const [responseType, setResponseType] = useState(""); // 'success' or 'error'
-  const [loading, setLoading] = useState(false); // State to manage button click feedback
-
-  const navigate = useNavigate(); // Initialize the navigate function
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    // Ensure that only 10 digits can be entered after the default value of "+91"
-    if (name === "mobile_no" && !/^\+91\d{0,10}$/.test(value)) {
-      return; // If input doesn't match, return without changing the state
-    }
-
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const navigate = useNavigate();
+  const {
+    formData,
+    setFormData,
+    responseMessage,
+    responseType,
+    loading,
+    setLoading,
+    handleChange,
+    handleClear,
+    setResponseMessage,
+    setResponseType,
+  } = useSignupContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Password validation: at least one special character and minimum length of 6
     const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
 
     if (formData.password.length < 6) {
@@ -60,10 +44,10 @@ export default function Signup() {
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
 
     try {
-      const response = await fetch("api/users/signup", {
+      const response = await fetch("/api/users/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +60,8 @@ export default function Signup() {
       if (response.ok) {
         setResponseMessage(result.message);
         setResponseType("success");
-        setTimeout(() => navigate("/home"), 1000); // Navigate to home page after 2 seconds
+        () => navigate("/signup/question1");
+        localStorage.setItem("userId", result.user.email);
       } else {
         setResponseMessage(result.message);
         setResponseType("error");
@@ -85,29 +70,12 @@ export default function Signup() {
       setResponseMessage(`Error: ${error.message}`);
       setResponseType("error");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
-  };
-
-  const handleClear = () => {
-    setFormData({
-      username: "",
-      email: "",
-      password: "",
-      name: "",
-      mobile_no: "+91",
-      date_of_birth: "",
-      category: "",
-    });
-    setResponseMessage("");
-    setResponseType("");
   };
 
   return (
     <div style={{ padding: "20px", backgroundColor: "#FFFFFF" }}>
-      {" "}
-      {/* Background color updated */}
-      {/* Response message positioned at the top */}
       {responseMessage && (
         <Alert severity={responseType} style={{ marginBottom: "20px" }}>
           {responseMessage}
@@ -116,11 +84,11 @@ export default function Signup() {
       <Container
         maxWidth="sm"
         style={{
-          backgroundColor: "#eeeeff", // Container color updated
+          backgroundColor: "#eeeeff",
           padding: "30px",
           borderRadius: "10px",
           marginTop: "20px",
-          boxShadow: "1px 25px 50px rgba(0.3, 0, 0.3, 0.5)", // Box shadow added
+          boxShadow: "1px 25px 50px rgba(0.3, 0, 0.3, 0.5)",
           "@media (max-width: 600px)": {
             padding: "20px",
             marginTop: "10px",
@@ -140,7 +108,6 @@ export default function Signup() {
             margin="normal"
             required
           />
-
           <TextField
             fullWidth
             label="Email address"
@@ -151,7 +118,6 @@ export default function Signup() {
             required
             type="email"
           />
-
           <TextField
             fullWidth
             label="Full Name"
@@ -161,7 +127,6 @@ export default function Signup() {
             margin="normal"
             required
           />
-
           <TextField
             fullWidth
             label="Mobile Number"
@@ -170,9 +135,8 @@ export default function Signup() {
             onChange={handleChange}
             margin="normal"
             required
-            inputProps={{ maxLength: 13 }} // Limits the maximum length to 13 characters
+            inputProps={{ maxLength: 13 }}
           />
-
           <TextField
             fullWidth
             label="Date of Birth"
@@ -184,7 +148,6 @@ export default function Signup() {
             type="date"
             InputLabelProps={{ shrink: true }}
           />
-
           <TextField
             select
             fullWidth
@@ -199,7 +162,6 @@ export default function Signup() {
             <MenuItem value="employee">Employee</MenuItem>
             <MenuItem value="householder">Householder</MenuItem>
           </TextField>
-
           <TextField
             fullWidth
             label="Password"
@@ -210,7 +172,6 @@ export default function Signup() {
             required
             type="password"
           />
-
           <Button
             type="submit"
             fullWidth
@@ -223,11 +184,10 @@ export default function Signup() {
                 marginTop: "10px",
               },
             }}
-            disabled={loading} // Disable button when loading
+            disabled={loading}
           >
-            {loading ? "Signing Up..." : "Sign Up"}
+            {loading ? "Signing Up..." : "Sign Up and Next"}
           </Button>
-
           <Button
             onClick={handleClear}
             fullWidth
@@ -237,11 +197,19 @@ export default function Signup() {
               marginTop: "10px",
               "@media (max-width: 600px)": {
                 marginTop: "5px",
+                marginBottom: "10px",
               },
             }}
           >
             Clear Form
           </Button>
+          <span> Have an account?</span>
+          <Link
+            to="/signin"
+            style={{ color: "#007bff", textDecoration: "none" }}
+          >
+            Sign in
+          </Link>
         </form>
       </Container>
     </div>
