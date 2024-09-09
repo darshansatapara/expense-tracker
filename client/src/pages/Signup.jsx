@@ -61,7 +61,7 @@ export default function Signup() {
         setResponseMessage(result.message);
         setResponseType("success");
         () => navigate("/signup/question1");
-        localStorage.setItem("userId", result.user.email);
+        localStorage.setItem("userId", result.user.email); //for store the category and sucategories in the data base
       } else {
         setResponseMessage(result.message);
         setResponseType("error");

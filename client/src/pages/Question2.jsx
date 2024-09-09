@@ -10,7 +10,6 @@ import {
   Button,
   Grid,
   Paper,
-  Chip,
   Alert,
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -24,7 +23,6 @@ function Question2() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Get selected categories from location state
     if (location.state?.selectedCategories) {
       setSelectedCategories(location.state.selectedCategories);
     }
@@ -47,14 +45,13 @@ function Question2() {
     });
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     let valid = true;
 
-    // Validate subcategory selection
     selectedCategories.forEach((category) => {
       if (
         !selectedSubcategories[category] ||
-        selectedSubcategories[category].length < 3
+        selectedSubcategories[category].length < 2
       ) {
         valid = false;
         setError("Please select at least 3 subcategories for each category.");
@@ -62,7 +59,36 @@ function Question2() {
     });
 
     if (valid) {
-      navigate("/"); // Or to the next page
+      const email = localStorage.getItem("userId"); // Retrieve email from localStorage
+
+      if (!email) {
+        setError("Email is not available. Please log in again.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/categories/create/${email}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ categoriesData: selectedSubcategories }),
+        });
+
+        if (response.ok) {
+          localStorage.removeItem("userId");
+        }
+        if (!response.ok) {
+          throw new Error("Failed to save categories");
+        }
+
+        const data = await response.json();
+        console.log("Data saved:", data);
+
+        navigate("/"); // Or to the next page
+      } catch (error) {
+        setError(error.message);
+      }
     }
   };
 

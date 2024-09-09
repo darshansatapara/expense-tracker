@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Category = require("../models/Category");
 const User = require("../models/User");
-
-// Create a new category with subcategories
 router.post("/create/:email", async (req, res) => {
   try {
     const { categoriesData } = req.body; // Expecting an object where keys are category names and values are objects with subcategories
@@ -16,10 +14,19 @@ router.post("/create/:email", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // Transform the categoriesData to match the schema
+    const transformedCategoriesData = Object.keys(categoriesData).reduce(
+      (acc, category) => {
+        acc[category] = { subcategories: categoriesData[category] };
+        return acc;
+      },
+      {}
+    );
+
     // Create a new category entry
     const category = new Category({
       userId: user._id, // Use the userId from the found user
-      categories: categoriesData,
+      categories: transformedCategoriesData,
     });
 
     // Save the category
