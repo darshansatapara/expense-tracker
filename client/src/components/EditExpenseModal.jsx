@@ -129,7 +129,8 @@ const EditExpenseModal = ({ visible, onClose, expenses, onUpdate }) => {
                 <Col style={{ justifyContent: 'center' }}>
                   <Button onClick={() => handleUpdate(index)} type="primary">Edit</Button>
                 </Col>
-              </Row>
+              </Row>  
+
             </Card>
           </List.Item>
         )}
