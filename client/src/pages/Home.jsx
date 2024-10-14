@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
+import "../css/Home.css"
 import Sidebar from "../components/Sidebar";
 import ContentPage from "../components/MyContent";
 import { Box, Button } from "@mui/material";

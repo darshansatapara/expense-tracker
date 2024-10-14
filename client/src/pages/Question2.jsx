@@ -85,7 +85,7 @@ function Question2() {
         const data = await response.json();
         console.log("Data saved:", data);
 
-        navigate("/"); // Or to the next page
+        navigate("/home"); // Or to the next page
       } catch (error) {
         setError(error.message);
       }
