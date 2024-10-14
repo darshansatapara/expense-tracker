@@ -1,27 +1,42 @@
-import React from 'react';
-import { Drawer, List, ListItem, ListItemText, Box, IconButton, useMediaQuery, useTheme } from '@mui/material';
-import { Link } from 'react-router-dom';
-import MenuIcon from '@mui/icons-material/Menu';
-
-const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
+import React, { useState } from "react";
+import {
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  Box,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { Link } from "react-router-dom";
+import "../css/Sidebar.css"
+const Sidebar = () => {
   const drawerWidth = 240; // Width of the sidebar
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [mobileOpen, setMobileOpen] = useState(false);
   const navItems = [
-    { text: 'Home', path: '/' },
-    { text: 'Analysis', path: '/analysis' },
-    { text: 'History', path: '/history' },
-    { text: 'Settings', path: '/settings' }
+    { text: "Home", path: "/home" },
+    { text: "History", path: "/history" },
+    { text: "Analysis", path: "/analysis" },
+    { text: "Setting", path: "/setting" },
   ];
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   const drawer = (
     <Box sx={{ mt: 2 }}>
       <List>
         {navItems.map((item) => (
-          <ListItem button component={Link} to={item.path} key={item.text}>
+          <ListItemButton
+            component={Link}
+            to={item.path}
+            key={item.text}
+          >
             <ListItemText primary={item.text} />
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
     </Box>
@@ -35,11 +50,11 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': {
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
               width: drawerWidth,
-              boxSizing: 'border-box',
-              top: '48px', // Adjusted to the height of the navbar
+              boxSizing: "border-box",
+              top: "48px", // Adjusted to the height of the navbar
             },
           }}
         >
@@ -51,10 +66,10 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
           sx={{
             width: drawerWidth,
             flexShrink: 0,
-            '& .MuiDrawer-paper': {
+            "& .MuiDrawer-paper": {
               width: drawerWidth,
-              boxSizing: 'border-box',
-              top: '48px', // Adjusted to the height of the navbar
+              boxSizing: "border-box",
+              top: "48px", // Adjusted to the height of the navbar
             },
           }}
           open
