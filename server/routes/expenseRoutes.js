@@ -5,23 +5,11 @@ const { default: mongoose } = require("mongoose");
 
 // Add an expense
 router.post("/addExpense", async (req, res) => {
-  const { userId, date, mode, amount, category, subcategory, description } =
-    req.body;
+  const { userId, date, mode, amount, category, subcategory, description } = req.body;
 
   try {
-    // Find or create an expense entry for the user based on the date
-    let userExpense = await UserExpense.findOne({
-      userId,
-      "expenses.date": date,
-    });
-
-    // If no entry exists, create a new one
-    if (!userExpense) {
-      userExpense = new UserExpense({
-        userId,
-        expenses: [{ date, online: [], offline: [] }],
-      });
-    }
+    // Find the user's expense document
+    let userExpense = await UserExpense.findOne({ userId });
 
     // Create the new expense object
     const newExpense = {
@@ -33,24 +21,51 @@ router.post("/addExpense", async (req, res) => {
       description,
     };
 
-    // Add the expense to the respective array based on the mode
-    if (mode === "Online") {
-      userExpense.expenses[0].online.push(newExpense); // Add to the first entry
-    } else if (mode === "Offline") {
-      userExpense.expenses[0].offline.push(newExpense); // Add to the first entry
+    // If the user doesn't have any expenses yet, create a new one
+    if (!userExpense) {
+      userExpense = new UserExpense({
+        userId,
+        expenses: [{ date, online: [], offline: [] }],
+      });
+
+      if (mode === "Online") {
+        userExpense.expenses[0].online.push(newExpense);
+      } else if (mode === "Offline") {
+        userExpense.expenses[0].offline.push(newExpense);
+      }
+    } else {
+      // Check if an expense for the given date exists
+      let expenseForDate = userExpense.expenses.find(exp => exp.date === date);
+
+      if (expenseForDate) {
+        // If the date exists, push the new expense to the respective mode
+        if (mode === "Online") {
+          expenseForDate.online.push(newExpense);
+        } else if (mode === "Offline") {
+          expenseForDate.offline.push(newExpense);
+        }
+      } else {
+        // If the date doesn't exist, create a new expense entry for the date
+        const newDateEntry = {
+          date,
+          online: mode === "Online" ? [newExpense] : [],
+          offline: mode === "Offline" ? [newExpense] : [],
+        };
+
+        userExpense.expenses.push(newDateEntry);
+      }
     }
 
     // Save the updated expense entry to the database
     await userExpense.save();
 
-    res
-      .status(201)
-      .json({ message: "Expense added successfully", userExpense });
+    res.status(201).json({ message: "Expense added successfully", userExpense });
   } catch (error) {
     console.error("Error adding expense:", error);
     res.status(500).json({ message: "Error adding expense", error });
   }
 });
+
 
 // Assuming you are using Express and have a UserExpense model defined
 router.get("/getExpenses/:userId/:startDate/:endDate", async (req, res) => {
