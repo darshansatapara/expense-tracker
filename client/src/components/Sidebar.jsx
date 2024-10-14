@@ -1,33 +1,84 @@
-import React, { useState } from "react"; // Combine all imports from 'react'
-import { Link } from "react-router-dom"; // Ensure 'react-router-dom' is installed
-import "../css/Sidebar.css"; // Correct CSS file import path
-import img from "../images/new.webp"; // Correct the image file extension to '.webp'
-import { menuItems } from "../utils/Item"; // Ensure the path and import are correct
+import React, { useState } from "react";
+import {
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  Box,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { Link } from "react-router-dom";
 
-export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+const Sidebar = () => {
+  const drawerWidth = 240; // Width of the sidebar
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const navItems = [
+    { text: "Home", path: "/" },
+    { text: "History", path: "/history" },
+    { text: "Analysis", path: "/analysis" },
+    { text: "Setting", path: "/setting" },
+  ];
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
-  return (
-    <div className="main">
-      <div className="logo">
-        <img src={img} alt="mylogo" />
-      </div>
-      <button className="burger-icon" onClick={toggleMenu}>
-        ☰
-      </button>
-      <ul className={`menu-items ${isOpen ? "active" : ""}`}>
-        {menuItems.map((item) => (
-          <li key={item.id}>
-            <Link to={item.path}>
-              <span>{item.title}</span>
-            </Link>
-          </li>
+  const drawer = (
+    <Box sx={{ mt: 2 }}>
+      <List>
+        {navItems.map((item) => (
+          <ListItemButton
+            component={Link}
+            to={item.path}
+            key={item.text}
+          >
+            <ListItemText primary={item.text} />
+          </ListItemButton>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   );
-}
+
+  return (
+    <>
+      {isMobile ? (
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          sx={{
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+              top: "48px", // Adjusted to the height of the navbar
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      ) : (
+        <Drawer
+          variant="permanent"
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+              top: "48px", // Adjusted to the height of the navbar
+            },
+          }}
+          open
+        >
+          {drawer}
+        </Drawer>
+      )}
+    </>
+  );
+};
+
+export default Sidebar;

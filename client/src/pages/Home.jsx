@@ -1,29 +1,69 @@
-import React from "react";
-import Sidebar from "../components/Sidebar";
+import React, { useState } from "react";
 import Navbar from "../components/Navbar";
-import "../css/Home.css"; // Ensure you have this file for custom styling
-import Section from "../components/Section";
+import Sidebar from "../components/Sidebar";
+import ContentPage from "../components/MyContent";
+import { Box, Button } from "@mui/material";
+import PopupForm from "../components/PopupForm.jsx";
 
+function Home() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-const HomePage = () => {
+  // Initialize the form values
+  const initialFormValues = {
+    date: new Date().toISOString().split("T")[0], // Set to current date by default
+    paymentMode: "Online",
+    amount: "",
+    category: "",
+    subCategory: "",
+    description: "",
+  };
+
+  const [formValues, setFormValues] = useState(initialFormValues);
+
+  // Function to handle opening the form modal
+  const handleOpenForm = () => {
+    setIsFormOpen(true);
+  };
+
+  // Function to handle closing the form modal
+  const handleCloseForm = () => {
+    setFormValues(initialFormValues); // Reset form values when modal is closed
+    setIsFormOpen(false);
+  };
+
   return (
-    <>
-      <div className="container-fluid">
-        <div className="row ">
-          <div className="">
-            <Navbar name="Home" />
-          
-          </div>
-          <div className="col-md-3 col-lg-2">
-            <Sidebar />
-          </div>
-         <div className="">
-          <Section />
-         </div>
-        </div>
-      </div>
-    </>
-  );
-};
+    <Box sx={{ display: "flex" }}>
+      <Navbar />
+      <Sidebar />
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          mt: { xs: "48px", sm: "48px" },
+          m: "100px",
+        }}
+      >
+        <ContentPage />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleOpenForm}
+          sx={{ mt: 2 }}
+        >
+          Add Transaction
+        </Button>
 
-export default HomePage;
+        {/* PopupForm component to show the modal */}
+        <PopupForm
+          open={isFormOpen}
+          formValues={formValues}
+          setFormValues={setFormValues}
+          handleClose={handleCloseForm} // Use handleCloseForm as form submission will be handled in PopupForm
+        />
+      </Box>
+    </Box>
+  );
+}
+
+export default Home;

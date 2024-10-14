@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, TextField, Button, Alert, Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom"; // Import the useNavigate hook
+import client from "../axios";
 
 export default function Signin() {
   const [formData, setFormData] = useState({
@@ -41,7 +42,9 @@ export default function Signin() {
       if (response.ok) {
         setResponseMessage(result.message);
         setResponseType("success");
-        setTimeout(() => navigate("/"), 1000); // Navigate to home page after 2 seconds
+        setTimeout(() => navigate("/"), 1000); 
+        localStorage.setItem("UserMail", result.user.email)
+        localStorage.setItem("UserId", result.user._id);
       } else {
         setResponseMessage(result.message);
         setResponseType("error");

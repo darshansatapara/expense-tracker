@@ -85,7 +85,7 @@ router.post("/signin", async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
-      }); 
+      });
     }
 
     // Hash the incoming password
@@ -111,12 +111,9 @@ router.post("/signin", async (req, res, next) => {
       success: true,
       message: "User logged in successfully",
       user: {
-        username: user.username,
+        _id: user._id,
         email: user.email,
         name: user.name,
-        mobile_no: user.mobile_no,
-        date_of_birth: user.date_of_birth,
-        category: user.category,
       },
       token,
     });
@@ -124,4 +121,5 @@ router.post("/signin", async (req, res, next) => {
     next(err); // Pass errors to the error-handling middleware
   }
 });
+
 module.exports = router;
