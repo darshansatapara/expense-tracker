@@ -17,7 +17,7 @@ router.post("/create/:email", async (req, res) => {
     // Transform the categoriesData to match the schema
     const transformedCategoriesData = Object.keys(categoriesData).reduce(
       (acc, category) => {
-        acc[category] = { subcategories: categoriesData[category] };
+        acc[category] = categoriesData[category];
         return acc;
       },
       {}

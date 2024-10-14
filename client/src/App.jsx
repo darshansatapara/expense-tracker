@@ -9,6 +9,7 @@ import History from "./components/History.jsx";
 import Setting from "./components/Setting.jsx";
 import Question1 from "./pages/Question1.jsx";
 import Question2 from "./pages/Question2.jsx";
+import VisitorPage from "./pages/VisitorPage.jsx";
 
 function App() {
   return (
@@ -16,12 +17,13 @@ function App() {
       <BrowserRouter>
         <SignupProvider>
           <Routes>
+            <Route path="/" element={<VisitorPage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/signup/question1" element={<Question1 />} />
             <Route path="/signup/question2" element={<Question2 />} />
 
             <Route path="/signin" element={<Signin />} />
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/analysis" element={<Analysis />} />
             <Route path="/history" element={<History />} />
             <Route path="/setting" element={<Setting />} />
