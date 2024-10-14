@@ -1,43 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
-import Sidebar from '../components/Sidebar';
-import ContentPage from '../components/MyContent';
-import { Box } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from "react";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import ContentPage from "../components/MyContent";
+import { Box, Button } from "@mui/material";
+import PopupForm from "../components/PopupForm.jsx";
 
 function Home() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState('Home');
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+  // Initialize the form values
+  const initialFormValues = {
+    date: new Date().toISOString().split("T")[0], // Set to current date by default
+    paymentMode: "Online",
+    amount: "",
+    category: "",
+    subCategory: "",
+    description: "",
   };
 
-  const location = useLocation();
-  useEffect(() => {
-    const pathToPageName = {
-      '/': 'Home',
-      '/analysis': 'Analysis',
-      '/history': 'History',
-      '/settings': 'Settings',
-    };
-    setCurrentPage(pathToPageName[location.pathname] || 'Home');
-  }, [location]);
+  const [formValues, setFormValues] = useState(initialFormValues);
+
+  // Function to handle opening the form modal
+  const handleOpenForm = () => {
+    setIsFormOpen(true);
+  };
+
+  // Function to handle closing the form modal
+  const handleCloseForm = () => {
+    setFormValues(initialFormValues); // Reset form values when modal is closed
+    setIsFormOpen(false);
+  };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Navbar handleDrawerToggle={handleDrawerToggle} currentPage={currentPage} />
-      <Sidebar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
+    <Box sx={{ display: "flex" }}>
+      <Navbar />
+      <Sidebar />
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
-          mt: { xs: '48px', sm: '48px' }, // Adjust to match the navbar height
-          ml: { sm: '240px' }, // Sidebar width for larger screens
+          mt: { xs: "48px", sm: "48px" },
+          m: "100px",
         }}
       >
         <ContentPage />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleOpenForm}
+          sx={{ mt: 2 }}
+        >
+          Add Transaction
+        </Button>
+
+        {/* PopupForm component to show the modal */}
+        <PopupForm
+          open={isFormOpen}
+          formValues={formValues}
+          setFormValues={setFormValues}
+          handleClose={handleCloseForm} // Use handleCloseForm as form submission will be handled in PopupForm
+        />
       </Box>
     </Box>
   );

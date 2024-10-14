@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { useSignupContext } from "../utils/SignupContext"; // Import the custom hook
+import client from "../axios";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -60,8 +61,9 @@ export default function Signup() {
       if (response.ok) {
         setResponseMessage(result.message);
         setResponseType("success");
-        () => navigate("/signup/question1");
-        localStorage.setItem("userId", result.user.email); //for store the category and sucategories in the data base
+        navigate("/signup/question1");
+        localStorage.setItem("UserMail", result.user.email);
+        localStorage.setItem("UserId", result.user._id); //for store the category and sucategories in the data base
       } else {
         setResponseMessage(result.message);
         setResponseType("error");
@@ -151,7 +153,7 @@ export default function Signup() {
           <TextField
             select
             fullWidth
-            label="Category"
+            label="Proffesion"
             name="category"
             value={formData.category}
             onChange={handleChange}

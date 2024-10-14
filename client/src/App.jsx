@@ -5,7 +5,7 @@ import Home from "../src/pages/Home.jsx";
 import Signup from "./pages/Signup.jsx";
 import Signin from "./pages/Signin.jsx";
 import Analysis from "./components/Analysis.jsx";
-import History from "./components/History.jsx";
+import History from "./pages/History.jsx";
 import Setting from "./components/Setting.jsx";
 import Question1 from "./pages/Question1.jsx";
 import Question2 from "./pages/Question2.jsx";
