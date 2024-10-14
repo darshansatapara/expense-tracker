@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, List, Input, message, Card, Form, Row, Col, Select } from "antd";
 import moment from "moment";
 import client from "../axios"; // Your axios instance or fetch function
-import "../componentsCSS/EditExpenseModal.css";
+import "../css/EditExpenseModal.css";
 
 const EditExpenseModal = ({ visible, onClose, expenses, onUpdate }) => {
   const [editableExpenses, setEditableExpenses] = useState([]);
@@ -129,7 +129,7 @@ const EditExpenseModal = ({ visible, onClose, expenses, onUpdate }) => {
                 <Col style={{ justifyContent: 'center' }}>
                   <Button onClick={() => handleUpdate(index)} type="primary">Edit</Button>
                 </Col>
-              </Row>  
+              </Row>
 
             </Card>
           </List.Item>

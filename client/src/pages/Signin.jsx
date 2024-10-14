@@ -42,7 +42,7 @@ export default function Signin() {
       if (response.ok) {
         setResponseMessage(result.message);
         setResponseType("success");
-        setTimeout(() => navigate("/"), 1000); 
+        setTimeout(() => navigate("/home"), 1000);
         localStorage.setItem("UserMail", result.user.email)
         localStorage.setItem("UserId", result.user._id);
       } else {

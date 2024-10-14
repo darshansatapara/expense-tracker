@@ -9,14 +9,14 @@ import {
   useTheme,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-
+import "../css/Sidebar.css"
 const Sidebar = () => {
   const drawerWidth = 240; // Width of the sidebar
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [mobileOpen, setMobileOpen] = useState(false);
   const navItems = [
-    { text: "Home", path: "/" },
+    { text: "Home", path: "/home" },
     { text: "History", path: "/history" },
     { text: "Analysis", path: "/analysis" },
     { text: "Setting", path: "/setting" },

@@ -11,6 +11,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle"; // Import AccountCircle icon
 import { useLocation, useNavigate } from "react-router-dom"; // Updated import
+import "../css/Navbar.css"
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = useState(null);
