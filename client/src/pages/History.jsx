@@ -20,6 +20,10 @@ const HistoryPage = () => {
   const userId = localStorage.getItem("UserId");
 
   const fetchExpenses = async (startDate, endDate) => {
+    if (!startDate || !endDate) {
+      return; // Prevent fetch if dates are invalid or null
+    }
+
     setLoading(true);
     try {
       const response = await client.get(`/expenses/getExpenses/${userId}/${startDate}/${endDate}`);
@@ -34,15 +38,25 @@ const HistoryPage = () => {
   };
 
   useEffect(() => {
+    if (dateRange[0] && dateRange[1]) {
+      fetchExpenses(dateRange[0].format("YYYY-MM-DD"), dateRange[1].format("YYYY-MM-DD"));
+    }
+  }, [userId, dateRange]);
+
+
+  useEffect(() => {
     fetchExpenses(dateRange[0].format("YYYY-MM-DD"), dateRange[1].format("YYYY-MM-DD"));
   }, [userId, dateRange]);
 
   const handleRangeChange = (newRange) => {
-    if (newRange && newRange.length) {
+    if (newRange && newRange[0] && newRange[1]) {
       setDateRange(newRange);
       fetchExpenses(newRange[0].format("YYYY-MM-DD"), newRange[1].format("YYYY-MM-DD"));
+    } else {
+      setExpenses([]); // Clear the expense list if the date range is invalid
     }
   };
+
 
   const handleEdit = (date) => {
     const selectedExpenses = expenses.find((exp) => exp.date === date)?.expenses || [];
@@ -124,8 +138,8 @@ const HistoryPage = () => {
                       Details:{" "}
                       {Array.isArray(expenseGroup.expenses)
                         ? expenseGroup.expenses
-                            .map((exp) => `${exp.mode}: ${exp._doc?.amount || 0}`)
-                            .join(", ")
+                          .map((exp) => `${exp.mode}: ${exp._doc?.amount || 0}`)
+                          .join(", ")
                         : "No expenses available"}
                     </p>
                   </Card>
