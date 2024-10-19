@@ -4,8 +4,8 @@ const expenseSchema = new mongoose.Schema({
   date: { type: String, required: true },
   mode: { type: String, enum: ["Online", "Offline"], required: true },
   amount: { type: Number, required: true },
-  category: { type: String, required: false },
-  subcategory: { type: String, required: false },
+  category: { type: String, required: true },
+  subcategory: { type: String, required: true },
   description: { type: String, required: false },
 });
 
