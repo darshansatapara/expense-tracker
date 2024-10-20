@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Container,
   Typography,
@@ -54,12 +55,12 @@ function Question2() {
         selectedSubcategories[category].length < 2
       ) {
         valid = false;
-        setError("Please select at least 3 subcategories for each category.");
+        setError("Please select at least 2 subcategories for each category.");
       }
     });
 
     if (valid) {
-      const email = localStorage.getItem("userId"); // Retrieve email from localStorage
+      const email = localStorage.getItem("UserMail"); // Retrieve email from localStorage
 
       if (!email) {
         setError("Email is not available. Please log in again.");
@@ -67,27 +68,23 @@ function Question2() {
       }
 
       try {
-        const response = await fetch(`/api/categories/create/${email}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await axios.post(
+          `/api/categories/create/${email}`,
+          {
+            categoriesData: selectedSubcategories,
           },
-          body: JSON.stringify({ categoriesData: selectedSubcategories }),
-        });
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-        if (response.ok) {
-          localStorage.removeItem("userId");
-        }
-        if (!response.ok) {
-          throw new Error("Failed to save categories");
-        }
-
-        const data = await response.json();
-        console.log("Data saved:", data);
-
+        console.log("Data saved:", response.data);
         navigate("/home"); // Or to the next page
       } catch (error) {
-        setError(error.message);
+        // Handle the error
+        setError(error.response ? error.response.data : error.message);
       }
     }
   };
@@ -144,7 +141,7 @@ function Question2() {
       )}
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
+          {error.message}
         </Alert>
       )}
       <Box display="flex" justifyContent="space-between" mt={2}>
