@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
+const incomeRoutes = require("./routes/incomeRoutes");
 const cors = require("cors");
 
 const app = express();
@@ -36,6 +37,7 @@ app.use(
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/expenses", expenseRoutes);
+app.use("/api/income", incomeRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running...");

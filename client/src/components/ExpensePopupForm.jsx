@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import client from "../axios"; // Axios client instance for making API calls
 
-function PopupForm({ open, handleClose, formValues, setFormValues }) {
+function ExpensePopupForm({ open, handleClose, formValues, setFormValues }) {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [categoryData, setCategoryData] = useState({});
@@ -128,6 +128,7 @@ function PopupForm({ open, handleClose, formValues, setFormValues }) {
           type="number"
           value={formValues.amount}
           onChange={handleChange}
+          onWheel={(e) => e.target.blur()}
           fullWidth
           sx={{ mb: 2 }}
         />
@@ -188,4 +189,4 @@ function PopupForm({ open, handleClose, formValues, setFormValues }) {
   );
 }
 
-export default PopupForm;
+export default ExpensePopupForm;

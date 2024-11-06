@@ -81,7 +81,7 @@ export default function Signin() {
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
-          Expansify - Sign In
+          Sign In
         </Typography>
         <form onSubmit={handleSubmit} noValidate autoComplete="off">
           <TextField

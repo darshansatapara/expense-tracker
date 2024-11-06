@@ -25,7 +25,7 @@ const ContentPage = () => {
             <Grid item xs={12}>
               <Card sx={{ boxShadow: 3 }}>
                 <CardContent>
-                  <Typography variant="body1" color="textSecondary" onClick={handleOpenModal}>
+                  <Typography variant="body1" color="textSecondary">
                     Income
                   </Typography>
                 </CardContent>
