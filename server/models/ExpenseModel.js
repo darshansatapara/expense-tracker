@@ -13,9 +13,9 @@ const userExpenseSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   expenses: [
     {
-      date: { type: String, required: true }, // Store the date for grouping
-      online: [expenseSchema], // Array for online expenses
-      offline: [expenseSchema], // Array for offline expenses
+      date: { type: String, required: true },
+      online: [expenseSchema], 
+      offline: [expenseSchema], 
     },
   ],
 });

@@ -122,4 +122,36 @@ router.post("/signin", async (req, res, next) => {
   }
 });
 
+// Route to get user details by userId
+router.get("/user/:userId", async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    // Find user by _id in MongoDB
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Send the user details without the password
+    res.status(200).json({
+      success: true,
+      user: {
+        username: user.username,
+        email: user.email,
+        name: user.name,
+        mobile_no: user.mobile_no,
+        date_of_birth: user.date_of_birth,
+        category: user.category,
+      },
+    });
+  } catch (error) {
+    next(error); // Pass errors to the error-handling middleware
+  }
+});
+
 module.exports = router;

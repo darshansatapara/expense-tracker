@@ -66,7 +66,6 @@ router.post("/addExpense", async (req, res) => {
   }
 });
 
-
 // Assuming you are using Express and have a UserExpense model defined
 router.get("/getExpenses/:userId/:startDate/:endDate", async (req, res) => {
   const { userId, startDate, endDate } = req.params;
@@ -93,11 +92,11 @@ router.get("/getExpenses/:userId/:startDate/:endDate", async (req, res) => {
         ...expenseGroup.offline.map((expense) => ({ ...expense, mode: "Offline" })),
       ];
 
-      console.log(combinedExpenses,"1grouped")
+      // console.log(combinedExpenses, "1grouped")
       return { date: expenseGroup.date, expenses: combinedExpenses };
     });
 
-    console.log(groupedExpenses,"grouped")
+    // console.log(groupedExpenses, "grouped")
 
     res.status(200).json({ expenses: groupedExpenses });
   } catch (error) {
@@ -106,9 +105,10 @@ router.get("/getExpenses/:userId/:startDate/:endDate", async (req, res) => {
   }
 });
 
+//update the expense details
 router.put("/updateExpense/:userId/:expenseDate", async (req, res) => {
-  const { userId, expenseDate } = req.params; // User ID and expense date from request parameters
-  const { mode, amount, category, subcategory, description } = req.body; // New expense details from request body
+  const { userId, expenseDate } = req.params;
+  const { mode, amount, category, subcategory, description, expenseId } = req.body; // include expenseId
 
   try {
     // Find the user expense document
@@ -120,38 +120,48 @@ router.put("/updateExpense/:userId/:expenseDate", async (req, res) => {
 
     // Find the expense object for the specified date
     const expenseDateObj = userExpenses.expenses.find(expense => expense.date === expenseDate);
-    
+
     if (!expenseDateObj) {
       return res.status(404).json({ message: "Expense date not found." });
     }
 
-    // Determine whether the expense is online or offline based on the mode
-    const expenseArray = mode === "Online" ? expenseDateObj.online : expenseDateObj.offline;
+    // Remove the expense from its current mode array
+    let expenseToUpdate;
+    const currentModeArray = expenseDateObj.online.concat(expenseDateObj.offline);
+    const expenseIndex = currentModeArray.findIndex(exp => exp._id.toString() === expenseId);
 
-    // Find the expense to update (you might need an ID or index to identify it uniquely)
-    const expenseToUpdate = expenseArray.find(exp => {
-      // Assuming that each expense has a unique identifier, like _id
-      return exp._id.toString() === req.body.expenseId; // `expenseId` must be provided in the request body
-    });
-
-    if (!expenseToUpdate) {
+    if (expenseIndex === -1) {
       return res.status(404).json({ message: "Expense not found." });
     }
 
-    // Update the expense details
-    if (amount) expenseToUpdate.amount = amount;
-    if (category) expenseToUpdate.category = category;
-    if (subcategory) expenseToUpdate.subcategory = subcategory;
-    if (description) expenseToUpdate.description = description;
+    // Update expense details
+    expenseToUpdate = currentModeArray[expenseIndex];
+    expenseToUpdate.amount = amount ?? expenseToUpdate.amount;
+    expenseToUpdate.category = category ?? expenseToUpdate.category;
+    expenseToUpdate.subcategory = subcategory ?? expenseToUpdate.subcategory;
+    expenseToUpdate.description = description ?? expenseToUpdate.description;
 
-    // Save the updated user expense document
+    // Handle mode change by removing from current mode array and moving to the new one if necessary
+    if (expenseToUpdate.mode !== mode) {
+      // Remove from current array
+      const oldModeArray = expenseToUpdate.mode === "Online" ? expenseDateObj.online : expenseDateObj.offline;
+      oldModeArray.splice(expenseIndex, 1);
+
+      // Update mode and add to the correct array
+      expenseToUpdate.mode = mode;
+      const newModeArray = mode === "Online" ? expenseDateObj.online : expenseDateObj.offline;
+      newModeArray.push(expenseToUpdate);
+    }
+
+    // Save updated document
     await userExpenses.save();
 
-    return res.status(200).json({ message: "Expense updated successfully.", updatedExpense: expenseToUpdate });
-
+    res.status(200).json({ message: "Expense updated successfully.", updatedExpense: expenseToUpdate });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Server error.", error });
+    res.status(500).json({ message: "Server error.", error });
   }
 });
+
+
 module.exports = router;
