@@ -1,8 +1,14 @@
 import React from 'react'
+import Navbar from './Navbar'
+import Sidebar from './Sidebar'
 
 function Setting() {
   return (
-    <div>Setting</div>
+    <>
+      <Navbar name="Analysis" />
+      <Sidebar />
+      <div>Setting</div>
+    </>
   )
 }
 

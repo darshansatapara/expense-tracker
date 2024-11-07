@@ -98,7 +98,7 @@ export default function Signup() {
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
-          Expansify - Sign Up
+          Sign Up
         </Typography>
         <form onSubmit={handleSubmit} noValidate autoComplete="off">
           <TextField
@@ -162,7 +162,9 @@ export default function Signup() {
           >
             <MenuItem value="student">Student</MenuItem>
             <MenuItem value="employee">Employee</MenuItem>
-            <MenuItem value="householder">Householder</MenuItem>
+            <MenuItem value="housewife">House Wife</MenuItem>
+            <MenuItem value="businessmen">Businessmen</MenuItem>
+            <MenuItem value="retired">Retired/Elder</MenuItem>
           </TextField>
           <TextField
             fullWidth
